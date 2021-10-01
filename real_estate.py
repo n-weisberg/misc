@@ -362,6 +362,14 @@ def getBenchMark(additions, growth, period):
 
 
 def runSimulation(mainSet, variables, cashFlow, volatility, showBenchmark):
+    """
+    Runs a simulation using the mean values in mainSet, 
+    showing the effect of changing each variable down to 50% it's value up to 200% percent it's value.
+    Adds/subtracts a random percent amount to each variable up to a max of volatility.
+    cashflow is a boolean to determine whether to use cashflow on the y-axis or total assets
+    showBenchmark is a boolean to determine whether to show line on graph representing the scenario
+    of just investing money in market instead of real estate
+    """
     xpoints = np.array([m / 100 for m in range(50, 200, 5)])
     for key in variables:
         yPointsHolder = []
@@ -394,6 +402,11 @@ def runSimulation(mainSet, variables, cashFlow, volatility, showBenchmark):
     plt.show()
 
 
+# Variables we want to graph. Changing a variable's sign to 0 will represent it's reciprocal when graphed.
+# This is useful for comparing the relative effect of two inversely favourable variables.
+# ie. How does a 10% increase in rent compare to a 10% decrease in management fees? Easier to compare visually when one of them is flipped.
+
+
 # variables = [[("additions", 1)], [("tax", 1)], [("management", 1)], [("repairs", 1)], [("insurance", 1)],
 #              [("holdTime", 1)], [("safety", 1)], [("interest", 1)], [("time", 1)], [("market", 1)],
 #              [("growth", 1)], [("expenses", 1)], [("income", 1)], [("down", 1)], [("amortization", 0)],
@@ -403,27 +416,36 @@ variables = [[("additions", 1)], [("tax", 1)], [("management", 1)], [("repairs",
              [("holdTime", 1)], [("safety", 1)], [("interest", 1)], [("time", 1)], [("market", 1)],
              [("growth", 1)], [("expenses", 1)], [("income", 1)], [("down", 1)], [("amortization", 0)]]
 
+# Mean values to use for simulation
 mainSet = {
-    "term": 100.0,
-    "holdTime": 5.0,
-    "safety": 6.0,
-    "additions": 2000.0,
-    "expenses": 1000.0,
-    "income": 60000.0,
-    "cost": 240.0,
-    "down": 20.0,
-    "amortization": 25,
-    "rent": 2400.0,
-    "tax": 2400.0,
-    "management": 2400.0,
-    "repairs": 2400,
-    "insurance": 1200.0,
-    "interest": 2.0,
-    "occupancy": 92,
-    "time": 6,
-    "maxDTI": 45.0,
-    "market": 2,
-    "growth": 8}
+    "term": 5.0,  # mortgage fixed rate term in years
+    "holdTime": 5.0, # time to hold property 
+    "safety": 6.0, # number of months safety buffer to save before next property
+    "additions": 2000.0, # money added from outside source monthly
+    "expenses": 1000.0, # personal expenses from outside sources (for DTI)
+    "income": 60000.0, # personal annual income from outside sources (for DTI)
+    "cost": 240.0,  # average cost of property (1000s)
+    "down": 20.0,   # percent down payment
+    "amortization": 25, # amortization period
+    "rent": 2400.0, # average rent recieved per property
+    "tax": 2400.0,  # average annual property tax per property
+    "management": 2400.0, # average annual property managment cost per property
+    "repairs": 2400,    # average annual repairs cost per property
+    "insurance": 1200.0,    # average annual insurance cost per property
+    "interest": 2.0,    # average annual interest rate
+    "occupancy": 92,    # average occupancy rate
+    "time": 6, # average time in months a property in listed before it sells
+    "maxDTI": 45.0, # max DTI allowed by banks
+    "market": 2,    # average annual housing market growth
+    "growth": 8     # average annual stock market growth
+    }
+
+
+# Uncomment one of the two function calls below.
+# runOnce runs the main set of variables, printing a report every month
+# runSimulation runs the data multiple times, 
+# using a range of 50% - 200% of the mean values in the main set, 
+# with random volatility added/subtracted from the variables, and then graphs the variables
 
 runOnce(mainSet)
 # runSimulation(mainSet, variables, True, 1, True)
